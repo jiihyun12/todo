@@ -2,9 +2,18 @@ import React, { useEffect } from 'react';
 import S from './style';
 import BasicButton from '../../components/button/BasicButton';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 
 const SignIn = () => {
+
+  // 로그인 이후 처리
+  const { isLogin, currentUser} = useSelector(state =>state.user)
+  const dispatch = useDispatch();
+  // console.log(isLogin, currentUser)
+
+  const navigate = useNavigate();
 
   // 이메일 양식 @, . 이메일 주소를 포함한 패턴을 지켜야 합니다.
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -23,7 +32,7 @@ const SignIn = () => {
       // fetch()이용, localhost:8000
 
       const {email, password} = data;
-        await fetch(`http://localhost:8000/user/signIn`, {
+        await fetch(`http://localhost:8000/auth/local`, {
         method : 'POST',
         headers : {
           'Content-Type' : 'application/json'
@@ -32,7 +41,20 @@ const SignIn = () => {
              email : email,
              password : password
         })
-      })    
+      })
+      .then((res)=>res.json())   
+      .then((res)=>{
+      if(!res.ok){alert(res.message)}
+      // 정상 응답 및 로그인 처리
+      // 1) 받은 token 정보를 저장
+      localStorage.setItem("jwtToken", res.jwtToken);
+      // 2) 리다이렉트 해야 하는 페이징 처리
+      navigate("/")
+      // 3) 화면에 뿌릴 수 있도록 유저정보를 파싱(redux)
+      console.log(res)
+
+    }) 
+
     })}>
 
       <S.Label>

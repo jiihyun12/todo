@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { felxCenter, flexCenterColumn } from '../../global/common'
+import { Link } from "react-router-dom";
 
 
 const S = {};
@@ -29,7 +30,16 @@ S.ButtonWrapper = styled.div`
     justify-content: space-between;
     margin: 0 0 100px 0;
 `
+S.IconButton = styled.button`
+    width: 48px;
+    height: 48px;
+    margin: 0 4px;
+    background: none;
 
+    & img{
+        width: 100%;
+    }
+`
 
 
 
